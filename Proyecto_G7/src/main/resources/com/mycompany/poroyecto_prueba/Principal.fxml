@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="711.0" spacing="15.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.poroyecto_prueba.PrincipalController">
+   <children>
+      <HBox alignment="CENTER" prefHeight="133.0" prefWidth="711.0" spacing="10.0">
+         <children>
+            <Label text="Copa Mundial de la FIFA Brasil 2014">
+               <opaqueInsets>
+                  <Insets top="50.0" />
+               </opaqueInsets>
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="128.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@LogoFIFA.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <ImageView fitHeight="247.0" fitWidth="428.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@ImgPortada.jpg" />
+         </image>
+      </ImageView>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Button fx:id="btnconsultarPartidos" mnemonicParsing="false" onAction="#consultaPartidos" prefHeight="25.0" prefWidth="200.0" text="CONSULTAR PARTIDOS" />
+            <Button fx:id="btnconsultarCopasMundiales" mnemonicParsing="false" onAction="#consultarCopasMundiales" prefHeight="25.0" prefWidth="200.0" text="CONSULTAR COPAS MUNDIALES" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
