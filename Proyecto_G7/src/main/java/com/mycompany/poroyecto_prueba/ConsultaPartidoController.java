@@ -4,9 +4,13 @@
  */
 package com.mycompany.poroyecto_prueba;
 
+import com.mycompany.model.Partido;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 
 /**
  * Clase de controlador FXML ConsultaPartidoController que pertenece al
@@ -17,6 +21,15 @@ import javafx.fxml.Initializable;
  */
 public class ConsultaPartidoController implements Initializable {
 
+    @FXML
+    private ComboBox<String> faseCmb;
+    @FXML
+    private ComboBox<String> Eq1Cmb;
+    @FXML
+    private ComboBox<String> gruposCmb;
+    @FXML
+    private ComboBox<String> Eq2Cmb;
+
     /**
      * Método sobreescrito que inicializa la clase de controlador.
      * @param url
@@ -24,7 +37,16 @@ public class ConsultaPartidoController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        ArrayList<String> listG = Partido.listaGrupos("WorldCupMatchesBrasil2014.csv");
+        ArrayList<String> listF = Partido.listaFase("WorldCupMatchesBrasil2014.csv");
+        ArrayList<String> listEquipLocal = Partido.listaEquipoLocal("WorldCupMatchesBrasil2014.csv");
+        ArrayList<String> listEquipoVisit = Partido.listaEquipoVisitante("WorldCupMatchesBrasil2014.csv");
+        //setear CmbBox
+        gruposCmb.getItems().setAll(listG);
+        faseCmb.getItems().setAll(listF);
+        Eq1Cmb.getItems().setAll(listEquipLocal);
+        Eq2Cmb.getItems().setAll(listEquipoVisit);
+        
     }
 
 }

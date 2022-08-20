@@ -32,25 +32,25 @@
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label text="Fase:" />
-                  <ComboBox prefWidth="150.0" />
+                  <ComboBox fx:id="faseCmb" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1">
                <children>
-                  <Label text="Label" />
-                  <ComboBox prefWidth="150.0" />
+                  <Label text="Equipo1" />
+                  <ComboBox fx:id="Eq1Cmb" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2">
                <children>
                   <Label text="Grupos:" />
-                  <ComboBox prefWidth="150.0" />
+                  <ComboBox fx:id="gruposCmb" prefWidth="150.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
                   <Label text="Label" />
-                  <ComboBox prefWidth="150.0" />
+                  <ComboBox fx:id="Eq2Cmb" prefWidth="150.0" />
                </children>
             </HBox>
             <Label text="vs" GridPane.columnIndex="1" GridPane.rowIndex="1">
