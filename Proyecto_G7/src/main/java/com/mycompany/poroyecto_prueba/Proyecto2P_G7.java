@@ -17,6 +17,7 @@ import static javafx.application.Application.launch;
  * @author Carlos Tingo
  */
 public class Proyecto2P_G7 extends Application {
+    public static String pathImg="src/main/resources/images/";
 
     private static Scene scene;
     

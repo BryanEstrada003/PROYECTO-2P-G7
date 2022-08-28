@@ -66,7 +66,7 @@ public class PrincipalController implements Initializable {
      * 
      * @param ae 
      */
-    @FXML
+   @FXML
     public void consultarCopasMundiales(ActionEvent ae){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ConsultaCopaMundial.fxml"));
