@@ -58,11 +58,12 @@ public class ConsultaCopaMundialController implements Initializable {
         titulo.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
         TextField anio = new TextField("Ingrese un año");
-        Button consultar = new Button("CONSULTAR");
-        HBox buscador = new HBox(new Label("Año: "), anio, consultar);
         VBox vbContenido = new VBox();
         VBox vbDatos = new VBox();
         HBox contenidos = new HBox();
+
+        Button consultar = new Button("CONSULTAR");
+        HBox buscador = new HBox(new Label("Año: "), anio, consultar);
 
         consultar.setOnAction((ActionEvent t) -> {
             consultar(anio, vbContenido, vbDatos, contenidos);
@@ -182,7 +183,7 @@ public class ConsultaCopaMundialController implements Initializable {
         ArrayList<CopaMundial> copasSeleccionadas = new ArrayList<>();
 
         for (CopaMundial cm : copasMundiales) {
-            if (cm.getYear()<=anio) {
+            if (cm.getYear() <= anio) {
                 copasSeleccionadas.add(cm);
             }
         }
@@ -225,7 +226,6 @@ public class ConsultaCopaMundialController implements Initializable {
             }
         }
 
-
         ImageView imgCupRunnersUp = null;
         if (contRunnersUp != 0) {
             for (int i = 0; i < contRunnersUp; i++) {
@@ -244,7 +244,6 @@ public class ConsultaCopaMundialController implements Initializable {
             }
         }
 
-
         ImageView imgCupThird = null;
         if (contThird != 0) {
             for (int i = 0; i < contThird; i++) {
@@ -262,7 +261,6 @@ public class ConsultaCopaMundialController implements Initializable {
 
             }
         }
-
 
         ImageView imgCupFourth = null;
         if (contFourth != 0) {
@@ -294,10 +292,10 @@ public class ConsultaCopaMundialController implements Initializable {
         Label lbPremios = new Label("Premios");
         lbPremios.setFont(new Font(16));
         VBox datos = new VBox(
-                            new Label("Goles anotados: " + String.valueOf(elegido.getGoalsScored())), 
-                            new Label("Equipos: " + String.valueOf(elegido.getQualifiedTeams())), 
-                            new Label("Partidos Jugados: " + String.valueOf(elegido.getMatchesPlayed())), 
-                            new Label("Partidos Jugados: " + elegido.getAttendance())
+                new Label("Goles anotados: " + String.valueOf(elegido.getGoalsScored())),
+                new Label("Equipos: " + String.valueOf(elegido.getQualifiedTeams())),
+                new Label("Partidos Jugados: " + String.valueOf(elegido.getMatchesPlayed())),
+                new Label("Partidos Jugados: " + elegido.getAttendance())
         );
         datos.setSpacing(24);
         vbDatos.getChildren().setAll(lbTitleDatos, new Separator(), datos);
