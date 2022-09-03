@@ -8,7 +8,10 @@ import com.mycompany.model.Jugador;
 import com.mycompany.model.Partido;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.URL;
 //import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
 import javafx.scene.control.ComboBox;
@@ -32,10 +36,12 @@ import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 /**
  * Clase de controlador FXML ConsultaPartidoController que pertenece al
@@ -44,7 +50,7 @@ import javafx.scene.text.FontWeight;
  * @author Michael Estrada
  * @author Carlos Tingo
  */
-public class ConsultaPartidoController implements Initializable {
+public class ConsultaPartidoController implements Initializable, Serializable {
 
     private final ArrayList<Partido> listPartido = Partido.listaPartido("WorldCupMatchesBrasil2014.csv");
     private final ArrayList<Jugador> listJugadores = Jugador.listaJugadores("WorldCupPlayersBrasil2014.csv");
@@ -75,6 +81,8 @@ public class ConsultaPartidoController implements Initializable {
     private VBox contenedorGeneralDatos;
     @FXML
     private HBox contenedorTitulo;
+    @FXML
+    private VBox contenedorBotones;
     /**
      * Método sobreescrito que permite Inicializa la clase de controlador.
      *
@@ -298,7 +306,24 @@ public class ConsultaPartidoController implements Initializable {
             eqLocal.getChildren().addAll(lblimgne, lblVisit);
 
         }
-
+        ArrayList<Jugador> jugadores = equiposSeleccionados(partidoSeleccionado); 
+        Button exportarGrupo = new Button("EXPORTAR RESULTADO DE GRUPOS");
+        Button detalle = new Button("VER DETALLE DE EQUIPO");
+        exportarGrupo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                ventanaExportar(jugadores);
+            }
+        });
+        detalle.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                ventanaDetalle(jugadores);
+            }
+        });
+        contenedorBotones.getChildren().addAll(exportarGrupo, detalle);
+        contenedorBotones.setAlignment(Pos.CENTER);
+        contenedorBotones.setSpacing(20);
         contenedor1.getChildren().addAll(fechaHora, stage, stadium, ciudad);
         contenedor2.getChildren().addAll(eqLocal);
         contenedor3.getChildren().addAll(finalPartido, goles);
@@ -306,13 +331,67 @@ public class ConsultaPartidoController implements Initializable {
 
         contenedor4.getChildren().add(eqVisit);
         contenedorDatos.setSpacing(50);
-        contenedorGeneralDatos.getChildren().add(contenedorDatos);
+        contenedorGeneralDatos.getChildren().addAll(contenedorDatos,contenedorBotones);
         contenedorDatos.getChildren().addAll(contenedor1, contenedor2, contenedor3, contenedor4);
         contenedorDatos.setPadding(new Insets(10));
         
-        ArrayList<Jugador> players = equiposSeleccionados(partidoSeleccionado); 
         
         
+        
+        
+        
+    }
+    private void ventanaExportar(ArrayList<Jugador> jugadores) {
+        Stage stage = new Stage();
+        Button aceptar = new Button("Aceptar");
+        Button cancelar = new Button("Cancelar");
+        HBox botones = new HBox(aceptar, cancelar);
+        Label msg = new Label("¿Estás seguro que desea exportar el grupo de jugadores seleccionados?");
+        botones.setSpacing(15);
+        botones.setAlignment(Pos.TOP_RIGHT);
+        aceptar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                try ( ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("exportResultGroup.ser"))) {
+                    out.writeObject(jugadores);
+                    out.flush();
+                    msg.setText("Se ha generado el archivo correctamente");
+                } catch (FileNotFoundException ex) {
+                   msg.setText("Lo sentimos, no se pudo guardar");
+                } catch (IOException ex) {
+                    msg.setText("Lo sentimos, no se pudo guardar");
+                }
+            }
+        });
+        cancelar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                stage.close();
+            }
+        });
+        VBox root = new VBox(msg, botones);
+        root.setSpacing(30);
+        root.setPadding(new Insets(20, 10, 20, 10));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+    }
+    private void ventanaDetalle(ArrayList<Jugador> jugadores) {
+        Stage stage = new Stage();
+        FlowPane root = new FlowPane();
+        Label lblTitulo = new Label("Detalle de equipos");
+        lblTitulo.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        VBox titulo = new VBox(lblTitulo);
+        titulo.setAlignment(Pos.CENTER);
+        root.getChildren().add(titulo);
+        
+        
+        
+        
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
     
     private ArrayList<Jugador> equiposSeleccionados(Partido partidoSeleccionado) {

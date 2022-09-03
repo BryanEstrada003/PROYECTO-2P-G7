@@ -65,6 +65,7 @@
          <children>
             <HBox fx:id="contenedorTitulo" prefHeight="42.0" prefWidth="673.0" />
             <HBox fx:id="contenedorDatos" prefHeight="127.0" prefWidth="673.0" />
+            <VBox fx:id="contenedorBotones" prefHeight="137.0" prefWidth="673.0" />
          </children>
       </VBox>
    </children>
