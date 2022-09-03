@@ -87,7 +87,7 @@ public class ConsultaCopaMundialController implements Initializable {
      * @param contenidos Contenedor donde estará toda la información de
      * vbContenido y vbDatos
      */
-    public void consultar(TextField txtAnio, VBox vbContenido, VBox vbDatos, HBox contenidos) {
+    private void consultar(TextField txtAnio, VBox vbContenido, VBox vbDatos, HBox contenidos) {
 
         ArrayList<CopaMundial> copasMundiales = CopaMundial.listaCopasMundiales("WorldCups.csv");
         int anio = 0;
@@ -135,7 +135,7 @@ public class ConsultaCopaMundialController implements Initializable {
      * @param copasMundiales ArrayList de las copas mundiales históricas
      * @param anio año que se consultó
      */
-    public void mostrarInformacion(CopaMundial elegido, VBox vbContenido, VBox vbDatos, HBox contenidos, ArrayList<CopaMundial> copasMundiales, int anio) {
+    private void mostrarInformacion(CopaMundial elegido, VBox vbContenido, VBox vbDatos, HBox contenidos, ArrayList<CopaMundial> copasMundiales, int anio) {
         ArrayList<String> posiciones = new ArrayList<>();
         posiciones.add(elegido.getWinner());
         posiciones.add(elegido.getRunnersUp());

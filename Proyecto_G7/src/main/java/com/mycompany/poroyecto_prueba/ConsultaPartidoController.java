@@ -29,13 +29,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * FXML Controller class
+ * Clase de controlador FXML ConsultaPartidoController que pertenece al
+ * paquete com.mycompany.poroyecto_prueba e implementa Initializable
  *
- * @author USER
+ * @author Michael Estrada
+ * @author Carlos Tingo
  */
 public class ConsultaPartidoController implements Initializable {
 
     private final ArrayList<Partido> listPartido = Partido.listaPartido("WorldCupMatchesBrasil2014.csv");
+    
 
     @FXML
     private ComboBox<String> faseCmb;
@@ -48,9 +51,6 @@ public class ConsultaPartidoController implements Initializable {
     @FXML
     private Button btnConsultar;
 
-    /**
-     * Initializes the controller class.
-     */
     @FXML
     private HBox contenedorResultadoPartido;
     @FXML
@@ -63,10 +63,17 @@ public class ConsultaPartidoController implements Initializable {
     private VBox contenedorResultadoFinal;
     @FXML
     private VBox contenedorBotones;
-
+    
+    /**
+     * Método sobreescrito que permite Inicializa la clase de controlador.
+     *
+     * @param url La ubicación utilizada para resolver rutas relativas para el
+     * objeto raíz, o nula si no se conoce la ubicación.
+     * @param rb Los recursos usados ​​para localizar el objeto raíz, o nulo si
+     * el objeto raíz no estaba localizado.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         cargarFase();
         cargarGrupos();
 
@@ -102,7 +109,6 @@ public class ConsultaPartidoController implements Initializable {
      * Este metodo carga los grupos al ComboBox cmbGrupos
      */
     private void cargarGrupos() {
-
         gruposCmb.getItems().addAll(Partido.listaGrupos("WorldCupMatchesBrasil2014.csv"));
         gruposCmb.setOnAction(new EventHandler() {
             @Override
@@ -124,8 +130,6 @@ public class ConsultaPartidoController implements Initializable {
      * sea si se busca por grupo o Fase
      */
     private void cargarEquipos(String sg) {
-//        String sg = gruposCmb.getSelectionModel().getSelectedItem();
-//        System.out.println(sg);
         Eq1Cmb.getItems().clear();
         Eq2Cmb.getItems().clear();
         for (Partido l : listPartido) {
@@ -144,101 +148,42 @@ public class ConsultaPartidoController implements Initializable {
     }
 
     private void seleccionarEquipo(ComboBox fase, ComboBox eq1, ComboBox eq2) {
-        btnConsultar.setOnAction(new EventHandler< ActionEvent>() {
+        btnConsultar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-
-                Partido partidoSeleccionado = null;
                 Label txtConsultaPartido = new Label();
-
+                Partido partidoSeleccionado= null;
                 for (Partido r : listPartido) {
                     contenedorResultadoPartido.getChildren().clear();
-
                     if (fase.getSelectionModel().getSelectedItem().equals(r.getStage()) && eq1.getSelectionModel().getSelectedItem().equals(r.getHomeTN()) && eq2.getSelectionModel().getSelectedItem().equals(r.getAwayTN())) {
                         partidoSeleccionado = r;
-
-                    } else {
-                        contenedorFecha.getChildren().clear();
-                        contenedorUltimo.getChildren().clear();
-                        contenedorDatos.getChildren().clear();
-                        contenedorBotones.getChildren().clear();
-                        contenedorResultadoPartido.getChildren().removeAll(txtConsultaPartido);
-                        txtConsultaPartido.setText("Partido no encontrado");
-                        contenedorResultadoPartido.getChildren().add(txtConsultaPartido);
                     }
 
                 }
+                if (partidoSeleccionado != null) {
+                    contenedorFecha.getChildren().clear();
+                    contenedorUltimo.getChildren().clear();
+                    contenedorDatos.getChildren().clear();
+                    contenedorBotones.getChildren().clear();
+                    contenedorResultadoPartido.getChildren().clear();
+                    txtConsultaPartido.setText("Resultado del partido");
+                    txtConsultaPartido.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+                    contenedorResultadoPartido.getChildren().add(txtConsultaPartido);
+                    String[] dateTime = partidoSeleccionado.getDateTime().trim().split("-");
+                    contenedorFecha.getChildren().add(new Label(dateTime[0].trim()));
 
-                contenedorResultadoPartido.getChildren().clear();
-                txtConsultaPartido.setText("Resultado del partido");
-                txtConsultaPartido.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-                contenedorResultadoPartido.getChildren().add(txtConsultaPartido);
-                try {
-                    if (partidoSeleccionado != null) {
-                        String[] dateTime = partidoSeleccionado.getDateTime().trim().split("-");
-                        contenedorFecha.getChildren().add(new Label(dateTime[0].trim()));
-                    }
-
-                } catch (NullPointerException npe) {
-
+                } else {
+                    contenedorFecha.getChildren().clear();
+                    contenedorUltimo.getChildren().clear();
+                    contenedorDatos.getChildren().clear();
+                    contenedorBotones.getChildren().clear();
+                    contenedorResultadoPartido.getChildren().removeAll(txtConsultaPartido);
+                    txtConsultaPartido.setText("Partido no encontrado");
+                    contenedorResultadoPartido.getChildren().add(txtConsultaPartido);
                 }
             }
         });
 
-//        DateTimeFormatter esDateFormatLargo = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy '").withLocale(new Locale("es", "ES"));
     }
 
-   
-
-//        if(){
-    @FXML
-    private void consultar(ActionEvent event) {
-
-    }
 }
-
-//    @FXML
-//    private void selectFase(ActionEvent e) {
-//        String s = faseCmb.getSelectionModel().getSelectedItem();
-//        System.out.println(s);
-//        if (!"Group".equals(s)) {
-//            gruposCmb.getItems().clear();
-////            Eq1Cmb.getItems().addAll(Partido.listaEquipoLocal("WorldCupMatchesBrasil2014.csv"));
-////            Eq2Cmb.getItems().addAll(Partido.listaEquipoVisitante("WorldCupMatchesBrasil2014.csv"));
-//        } else {
-//            gruposCmb.getItems().addAll(Partido.listaGrupos("WorldCupMatchesBrasil2014.csv"));
-//
-//        }
-//
-//    }
-//// "WorldCupMatchesBrasil2014.csv"
-//
-//    @FXML
-//    private void selectGrupos(ActionEvent e) {
-//        String sg = gruposCmb.getSelectionModel().getSelectedItem();
-//        //Grupo A
-//        System.out.println(sg);
-//        ArrayList<Partido> listPartido = Partido.listaPartido("WorldCupMatchesBrasil2014.csv");
-//        Eq1Cmb.getItems().clear();
-//        for (Partido l : listPartido) {
-//            System.out.println(l.getStage() + " - " + l.getHomeTN());
-//            if (sg.equals(l.getStage())) {
-//                if(!(Eq1Cmb.getItems().contains(l.getHomeTN()))){
-//                    Eq1Cmb.getItems().addAll(l.getHomeTN());
-//                    
-//                }
-//                
-//
-//            } else {
-////                   System.out.println(sg);
-////                   System.out.println(l.getStage());
-////                   System.out.println(l.getHomeTN());
-//            }
-//        }
-//    }
-//    //comparar equipos
-//    private void compararEquipos(){
-//        
-//        
-//    }
-
