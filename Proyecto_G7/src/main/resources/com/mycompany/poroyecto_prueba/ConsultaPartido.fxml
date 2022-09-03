@@ -61,20 +61,12 @@
          </children>
       </GridPane>
       <Button fx:id="btnConsultar" mnemonicParsing="false" text="CONSULTAR" />
-      <HBox fx:id="contenedorResultadoPartido" alignment="CENTER" prefHeight="35.0" prefWidth="673.0" />
-      <HBox fx:id="contenedorFecha" prefHeight="28.0" prefWidth="673.0" />
-      <HBox fx:id="contenedorUltimo" alignment="CENTER" prefHeight="88.0" prefWidth="673.0" spacing="70.0">
+      <VBox fx:id="contenedorGeneralDatos" prefHeight="286.0" prefWidth="673.0">
          <children>
-            <VBox fx:id="contenedorDatos" prefHeight="200.0" prefWidth="100.0" />
-            <HBox alignment="CENTER" prefHeight="85.0" prefWidth="113.0" />
-            <VBox fx:id="contenedorResultadoFinal" prefHeight="200.0" prefWidth="100.0" />
-            <HBox alignment="CENTER" prefHeight="85.0" prefWidth="113.0" />
+            <HBox fx:id="contenedorTitulo" prefHeight="42.0" prefWidth="673.0" />
+            <HBox fx:id="contenedorDatos" prefHeight="127.0" prefWidth="673.0" />
          </children>
-         <padding>
-            <Insets left="10.0" />
-         </padding>
-      </HBox>
-      <VBox fx:id="contenedorBotones" alignment="CENTER" prefHeight="91.0" prefWidth="673.0" />
+      </VBox>
    </children>
    <opaqueInsets>
       <Insets />
