@@ -12,8 +12,9 @@ import java.util.Arrays;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 /**
- *
- * @author USER
+ * Clase Partido que pertenece al paquete com.mycompany.model
+ * @author Carlos Tingo
+ * @author Michael Estrada
  */
 public class Partido {
 
@@ -37,7 +38,29 @@ public class Partido {
     private String matchID;
     private String homeTeamInitials;
     private String awayTeamInitials;
-
+    /**
+     * Constructor de la clase
+     * @param year año
+     * @param dateTime fecha y hora
+     * @param stage Lugar donde se jugó
+     * @param stadium estadio donde se jugó
+     * @param city Ciudad del partido
+     * @param homeTN locales
+     * @param homeTG visitantes
+     * @param awayTG 
+     * @param awayTN
+     * @param winConditions
+     * @param attendance
+     * @param halfTimeHomeGoals
+     * @param halfTimeAwayGoals
+     * @param referee
+     * @param assistant1
+     * @param assistant2
+     * @param roundID
+     * @param matchID
+     * @param homeTeamInitials
+     * @param awayTeamInitials 
+     */
     public Partido(String year, String dateTime, String stage, String stadium, String city, String homeTN, String homeTG, String awayTG, String awayTN, String winConditions, String attendance, String halfTimeHomeGoals, String halfTimeAwayGoals, String referee, String assistant1, String assistant2, String roundID, String matchID, String homeTeamInitials, String awayTeamInitials) {
         this.year = year;
         this.dateTime = dateTime;
