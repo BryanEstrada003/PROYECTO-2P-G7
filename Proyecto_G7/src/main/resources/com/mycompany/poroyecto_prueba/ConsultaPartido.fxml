@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="462.0" prefWidth="693.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.poroyecto_prueba.ConsultaPartidoController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="519.0" prefWidth="693.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.poroyecto_prueba.ConsultaPartidoController">
    <children>
       <Label text="Consulta de Partidos" textAlignment="CENTER">
          <font>
@@ -49,7 +49,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
-                  <Label text="Label" />
+                  <Label text="Equipo2" />
                   <ComboBox fx:id="Eq2Cmb" prefWidth="150.0" />
                </children>
             </HBox>
@@ -60,29 +60,21 @@
             </Label>
          </children>
       </GridPane>
-      <Button mnemonicParsing="false" text="CONSULTAR" />
-      <HBox prefHeight="43.0" prefWidth="580.0" />
-      <HBox prefHeight="43.0" prefWidth="580.0" />
-      <GridPane prefHeight="85.0" prefWidth="559.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
+      <Button fx:id="btnConsultar" mnemonicParsing="false" onAction="#consultar" text="CONSULTAR" />
+      <HBox fx:id="contenedorResultadoPartido" alignment="CENTER" prefHeight="35.0" prefWidth="673.0" />
+      <HBox fx:id="contenedorFecha" prefHeight="28.0" prefWidth="673.0" />
+      <HBox fx:id="contenedorUltimo" alignment="CENTER" prefHeight="88.0" prefWidth="673.0" spacing="70.0">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" />
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" />
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" />
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" />
+            <VBox fx:id="contenedorDatos" prefHeight="200.0" prefWidth="100.0" />
+            <HBox alignment="CENTER" prefHeight="85.0" prefWidth="113.0" />
+            <VBox fx:id="contenedorResultadoFinal" prefHeight="200.0" prefWidth="100.0" />
+            <HBox alignment="CENTER" prefHeight="85.0" prefWidth="113.0" />
          </children>
-      </GridPane>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </HBox>
+      <VBox fx:id="contenedorBotones" alignment="CENTER" prefHeight="91.0" prefWidth="673.0" />
    </children>
    <opaqueInsets>
       <Insets />
