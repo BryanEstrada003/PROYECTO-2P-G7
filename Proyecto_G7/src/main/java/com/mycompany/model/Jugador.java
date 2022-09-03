@@ -236,7 +236,6 @@ public class Jugador {
             String linea;
             while ((linea = bf.readLine()) != null) {
                 String datos[] = linea.trim().split(",");
-                System.out.println(linea);
 
                 if (datos.length == 9) {
                     listaJ.add(new Jugador(datos[0].trim(), datos[1].trim(), datos[2].trim(), datos[3].trim(), datos[4].trim(), datos[5].trim(), datos[6].trim(), datos[7].trim(), datos[8].trim()));

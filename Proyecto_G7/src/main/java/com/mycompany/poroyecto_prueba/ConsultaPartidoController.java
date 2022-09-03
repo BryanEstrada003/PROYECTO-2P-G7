@@ -4,7 +4,11 @@
  */
 package com.mycompany.poroyecto_prueba;
 
+import com.mycompany.model.Jugador;
 import com.mycompany.model.Partido;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 //import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,11 +21,16 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -38,7 +47,7 @@ import javafx.scene.text.FontWeight;
 public class ConsultaPartidoController implements Initializable {
 
     private final ArrayList<Partido> listPartido = Partido.listaPartido("WorldCupMatchesBrasil2014.csv");
-    
+    private final ArrayList<Jugador> listJugadores = Jugador.listaJugadores("WorldCupPlayersBrasil2014.csv");
 
     @FXML
     private ComboBox<String> faseCmb;
@@ -52,18 +61,20 @@ public class ConsultaPartidoController implements Initializable {
     private Button btnConsultar;
 
     @FXML
-    private HBox contenedorResultadoPartido;
-    @FXML
-    private HBox contenedorFecha;
-    @FXML
-    private HBox contenedorUltimo;
-    @FXML
-    private VBox contenedorDatos;
-    @FXML
-    private VBox contenedorResultadoFinal;
-    @FXML
-    private VBox contenedorBotones;
+    private HBox contenedorDatos;
     
+    
+    private VBox contenedor1 = new VBox();
+
+    private VBox contenedor2 = new VBox();
+    private VBox contenedor3 = new VBox();
+    private VBox contenedor4 = new VBox();
+    HBox eqLocal = new HBox();
+    HBox eqVisit = new HBox();
+    @FXML
+    private VBox contenedorGeneralDatos;
+    @FXML
+    private HBox contenedorTitulo;
     /**
      * Método sobreescrito que permite Inicializa la clase de controlador.
      *
@@ -114,7 +125,6 @@ public class ConsultaPartidoController implements Initializable {
             @Override
             public void handle(Event t) {
                 String sg = gruposCmb.getSelectionModel().getSelectedItem();
-                System.out.println(sg);
                 cargarEquipos(sg);
                 seleccionarEquipo(gruposCmb, Eq1Cmb, Eq2Cmb);
 
@@ -148,42 +158,177 @@ public class ConsultaPartidoController implements Initializable {
     }
 
     private void seleccionarEquipo(ComboBox fase, ComboBox eq1, ComboBox eq2) {
-        btnConsultar.setOnAction(new EventHandler<ActionEvent>() {
+        btnConsultar.setOnAction(new EventHandler< ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
+                Partido partidoSeleccionado = null;
                 Label txtConsultaPartido = new Label();
-                Partido partidoSeleccionado= null;
-                for (Partido r : listPartido) {
-                    contenedorResultadoPartido.getChildren().clear();
-                    if (fase.getSelectionModel().getSelectedItem().equals(r.getStage()) && eq1.getSelectionModel().getSelectedItem().equals(r.getHomeTN()) && eq2.getSelectionModel().getSelectedItem().equals(r.getAwayTN())) {
-                        partidoSeleccionado = r;
+                try {
+                    for (Partido r : listPartido) {
+
+                        if (fase.getSelectionModel().getSelectedItem().equals(r.getStage()) && eq1.getSelectionModel().getSelectedItem().equals(r.getHomeTN()) && eq2.getSelectionModel().getSelectedItem().equals(r.getAwayTN())) {
+                            partidoSeleccionado = r;
+
+                        }
+
                     }
 
-                }
-                if (partidoSeleccionado != null) {
-                    contenedorFecha.getChildren().clear();
-                    contenedorUltimo.getChildren().clear();
+                    contenedorGeneralDatos.getChildren().clear();
+                    contenedor1.getChildren().clear();
+                    contenedor2.getChildren().clear();
+                    contenedor3.getChildren().clear();
+                    contenedor4.getChildren().clear();
+//                    contenedorFecha.getChildren().clear();
                     contenedorDatos.getChildren().clear();
-                    contenedorBotones.getChildren().clear();
-                    contenedorResultadoPartido.getChildren().clear();
-                    txtConsultaPartido.setText("Resultado del partido");
-                    txtConsultaPartido.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-                    contenedorResultadoPartido.getChildren().add(txtConsultaPartido);
-                    String[] dateTime = partidoSeleccionado.getDateTime().trim().split("-");
-                    contenedorFecha.getChildren().add(new Label(dateTime[0].trim()));
+                    HBox consultarPartidoTitulo = new HBox();
+                    HBox datosPartido = new HBox();
+                    if (partidoSeleccionado == null) {
+                        contenedorGeneralDatos.getChildren().clear();
 
-                } else {
-                    contenedorFecha.getChildren().clear();
-                    contenedorUltimo.getChildren().clear();
-                    contenedorDatos.getChildren().clear();
-                    contenedorBotones.getChildren().clear();
-                    contenedorResultadoPartido.getChildren().removeAll(txtConsultaPartido);
-                    txtConsultaPartido.setText("Partido no encontrado");
-                    contenedorResultadoPartido.getChildren().add(txtConsultaPartido);
+                        txtConsultaPartido.setText("Partido no encontrado");
+                        txtConsultaPartido.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+                        consultarPartidoTitulo.getChildren().add(txtConsultaPartido);
+                        contenedorGeneralDatos.getChildren().add(consultarPartidoTitulo);
+                    } else {
+                        txtConsultaPartido.setText("Resultado del partido");
+                        txtConsultaPartido.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+                        contenedorTitulo.getChildren().add(txtConsultaPartido);
+                        llenarContenido(partidoSeleccionado);
+
+                    }
+
+                } catch (NullPointerException npe) {
+
                 }
             }
         });
 
+//        DateTimeFormatter esDateFormatLargo = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy '").withLocale(new Locale("es", "ES"));
     }
 
+    private void llenarContenido(Partido partidoSeleccionado) {
+        String[] dateTime = partidoSeleccionado.getDateTime().trim().split("-");
+        HBox contenedorFecha = new HBox();
+
+        String cadenaGoles = partidoSeleccionado.getHomeTG() + "-" + partidoSeleccionado.getAwayTG();
+
+        ImageView imgvLocal = null;
+        Label lblImgNoEncontrada = null;
+        FileInputStream fi = null;
+
+        try {
+            fi = new FileInputStream(Proyecto2P_G7.pathImg + partidoSeleccionado.getHomeTN() + ".jpg");
+            Image img = new Image(fi);
+            imgvLocal = new ImageView(img);
+            imgvLocal.setFitHeight(37);
+            imgvLocal.setFitWidth(50);
+
+        } catch (IOException ioe) {
+            lblImgNoEncontrada = new Label();
+            try {
+                fi = new FileInputStream(Proyecto2P_G7.pathImg + "StandardImg.jpg");
+                Image i = new Image(fi);
+                imgvLocal = new ImageView(i);
+            } catch (FileNotFoundException fnf2) {
+                eqLocal.getChildren().clear();
+
+                eqLocal.getChildren().add(new Label("Imagen no encontrada"));
+            }
+            imgvLocal.setFitHeight(37);
+            imgvLocal.setFitWidth(50);
+        }
+
+        ImageView imgvVisit = null;
+        Label lblimgne = null;
+        FileInputStream fiv = null;
+        try {
+            fiv = new FileInputStream(Proyecto2P_G7.pathImg + partidoSeleccionado.getAwayTN() + ".jpg");
+            Image img = new Image(fiv);
+            imgvVisit = new ImageView(img);
+            imgvVisit.setFitHeight(37);
+            imgvVisit.setFitWidth(50);
+
+        } catch (IOException ioe) {
+            lblimgne = new Label();
+            try {
+                fiv = new FileInputStream(Proyecto2P_G7.pathImg + "StandardImg.jpg");
+                Image i = new Image(fiv);
+                imgvVisit = new ImageView(i);
+            } catch (FileNotFoundException fnf2) {
+                eqVisit.getChildren().clear();
+
+                eqVisit.getChildren().add(new Label("Imagen no encontrada"));
+            }
+            imgvVisit.setFitHeight(37);
+            imgvVisit.setFitWidth(50);
+        }
+
+//        contenedorFecha.getChildren().add()
+        contenedorGeneralDatos.getChildren().setAll(new Label(dateTime[0].trim()), new Separator(), contenedorFecha);
+        //ContenedorDatos
+        Label fechaHora = new Label(partidoSeleccionado.getDateTime());
+        Label stage = new Label(partidoSeleccionado.getStage());
+        stage.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        Label stadium = new Label(partidoSeleccionado.getStadium());
+        Label ciudad = new Label(partidoSeleccionado.getCity());
+        Label lblLocal = new Label(partidoSeleccionado.getHomeTN());
+        lblLocal.setFont(Font.font(24));
+
+        Label finalPartido = new Label("Final del partido");
+        Label goles = new Label(cadenaGoles);
+        Label lblVisit = new Label(partidoSeleccionado.getAwayTN());
+        lblVisit.setFont(Font.font(24));
+
+        HBox eqLocal = new HBox();
+
+        if (imgvLocal != null) {
+            eqLocal.getChildren().addAll(imgvLocal, lblLocal);
+
+        } else {
+            //lblImgNoEncontrada
+            eqLocal.getChildren().addAll(lblImgNoEncontrada, lblLocal);
+
+        }
+        HBox eqVisit = new HBox();
+        if (imgvVisit != null) {
+            eqVisit.getChildren().addAll(imgvVisit, lblVisit);
+
+        } else {
+            //lblImgNoEncontrada
+            eqLocal.getChildren().addAll(lblimgne, lblVisit);
+
+        }
+
+        contenedor1.getChildren().addAll(fechaHora, stage, stadium, ciudad);
+        contenedor2.getChildren().addAll(eqLocal);
+        contenedor3.getChildren().addAll(finalPartido, goles);
+        contenedor3.setAlignment(Pos.TOP_CENTER);
+
+        contenedor4.getChildren().add(eqVisit);
+        contenedorDatos.setSpacing(50);
+        contenedorGeneralDatos.getChildren().add(contenedorDatos);
+        contenedorDatos.getChildren().addAll(contenedor1, contenedor2, contenedor3, contenedor4);
+        contenedorDatos.setPadding(new Insets(10));
+        
+        ArrayList<Jugador> players = equiposSeleccionados(partidoSeleccionado); 
+        
+        
+    }
+    
+    private ArrayList<Jugador> equiposSeleccionados(Partido partidoSeleccionado) {
+        String match = partidoSeleccionado.getMatchID();
+        String round = partidoSeleccionado.getRoundID();
+        ArrayList<Jugador> jugadores= new ArrayList<>();
+        for(Jugador r:listJugadores){
+            if(match.equals(r.getMatchId())){
+                jugadores.add(r);
+                
+                
+            }
+            
+        }
+        
+
+        return jugadores;
+    }
 }
