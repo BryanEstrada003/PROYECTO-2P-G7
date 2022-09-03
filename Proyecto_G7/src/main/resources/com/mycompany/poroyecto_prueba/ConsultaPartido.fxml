@@ -60,7 +60,7 @@
             </Label>
          </children>
       </GridPane>
-      <Button fx:id="btnConsultar" mnemonicParsing="false" onAction="#consultar" text="CONSULTAR" />
+      <Button fx:id="btnConsultar" mnemonicParsing="false" text="CONSULTAR" />
       <HBox fx:id="contenedorResultadoPartido" alignment="CENTER" prefHeight="35.0" prefWidth="673.0" />
       <HBox fx:id="contenedorFecha" prefHeight="28.0" prefWidth="673.0" />
       <HBox fx:id="contenedorUltimo" alignment="CENTER" prefHeight="88.0" prefWidth="673.0" spacing="70.0">
