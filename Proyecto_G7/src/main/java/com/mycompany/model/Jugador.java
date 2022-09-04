@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -233,7 +235,7 @@ public class Jugador implements Serializable {
      */
     public static ArrayList<Jugador> listaJugadores(String archivo) {
         ArrayList<Jugador> listaJ = new ArrayList<>();
-        try ( BufferedReader bf = new BufferedReader(new FileReader(archivo))) {
+        try ( BufferedReader bf = new BufferedReader(new FileReader(archivo,StandardCharsets.UTF_8))) {
             String linea;
             while ((linea = bf.readLine()) != null) {
                 String datos[] = linea.trim().split(",");

@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.net.URL;
 //import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 //import java.util.Calendar;
 //import java.util.Locale;
@@ -113,6 +114,8 @@ public class ConsultaPartidoController implements Initializable {
 
                 if ("Group".equals(s)) {
                     gruposCmb.setDisable(false);
+                    Eq1Cmb.getItems().clear();
+                    Eq2Cmb.getItems().clear();
                     // LOS QUE NO SON DE GRUPOS
                 } else {
 
@@ -120,6 +123,7 @@ public class ConsultaPartidoController implements Initializable {
                     gruposCmb.setDisable(true);
 
                     cargarEquipos(sg);
+
                     seleccionarEquipo(faseCmb, Eq1Cmb, Eq2Cmb);
                 }
             }
@@ -130,12 +134,14 @@ public class ConsultaPartidoController implements Initializable {
      * Este metodo carga los grupos al ComboBox cmbGrupos
      */
     private void cargarGrupos() {
+
         gruposCmb.getItems().addAll(Partido.listaGrupos("WorldCupMatchesBrasil2014.csv"));
         gruposCmb.setOnAction(new EventHandler() {
             @Override
             public void handle(Event t) {
                 String sg = gruposCmb.getSelectionModel().getSelectedItem();
                 cargarEquipos(sg);
+
                 seleccionarEquipo(gruposCmb, Eq1Cmb, Eq2Cmb);
 
             }
@@ -158,15 +164,26 @@ public class ConsultaPartidoController implements Initializable {
                 if (!(Eq1Cmb.getItems().contains(l.getHomeTN())) && !(Eq2Cmb.getItems().contains(l.getAwayTN()))) {
 
                     Eq1Cmb.getItems().addAll(l.getHomeTN());
+                    Collections.sort(Eq1Cmb.getItems());
                     Eq2Cmb.getItems().addAll(l.getAwayTN());
+                    Collections.sort(Eq2Cmb.getItems());
 
                 }
 
             }
 
         }
+
     }
 
+    /**
+     * Este metodo se encarga de verificar los equipos seleccionados para
+     * comparar conforme a los datos y para poder cargar los cuadros despues
+     *
+     * @param fase recibe el ComboBox que contiene fases
+     * @param eq1 recibe ComboBox que contiene el equipo1
+     * @param eq2 recibe ComboBox que contiene el equipo2
+     */
     private void seleccionarEquipo(ComboBox fase, ComboBox eq1, ComboBox eq2) {
         btnConsultar.setOnAction(new EventHandler< ActionEvent>() {
             @Override
@@ -216,6 +233,12 @@ public class ConsultaPartidoController implements Initializable {
 //        DateTimeFormatter esDateFormatLargo = DateTimeFormatter.ofPattern("EEEE, dd 'de' MMMM 'de' yyyy '").withLocale(new Locale("es", "ES"));
     }
 
+    /**
+     * Este metodo es encargado de llenar contenido a los cuadros
+     *
+     * @param partidoSeleccionado recibe parametro de tipo Partido para poder
+     * realizar la comparacion
+     */
     private void llenarContenido(Partido partidoSeleccionado) {
         String[] dateTime = partidoSeleccionado.getDateTime().trim().split("-");
         HBox contenedorFecha = new HBox();
@@ -339,7 +362,10 @@ public class ConsultaPartidoController implements Initializable {
         contenedorDatos.setPadding(new Insets(10));
 
     }
-
+/**
+ * Este metodo carga una ventana el cual da las opciones de exportar los datos
+ * @param jugadores recibe un ArrayList de tipo Jugador para poder cargar los datos de los jugadores
+ */
     private void ventanaExportar(ArrayList<Jugador> jugadores) {
         Stage stage = new Stage();
         Button aceptar = new Button("Aceptar");
@@ -467,25 +493,30 @@ public class ConsultaPartidoController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-    
-    private void cargarHilo(){
-        Thread t = new Thread(new Runnable(){
+
+    private void cargarHilo() {
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
+                try {
                     Thread.sleep(10000);
-                }catch(InterruptedException ex){
-                    
+                } catch (InterruptedException ex) {
+
                 }
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     //Etiqueta
                 });
-                
+
             }
-            
+
         });
-        
+
     }
+    /**
+     * Este metodo se encarga de cargar un ArrayList de tipo Jugador para poder trabajar con la nueva ventana
+     * @param partidoSeleccionado recibe parametro de tipo Partido
+     * @return 
+     */
 
     private ArrayList<Jugador> equiposSeleccionados(Partido partidoSeleccionado) {
         String match = partidoSeleccionado.getMatchID();
