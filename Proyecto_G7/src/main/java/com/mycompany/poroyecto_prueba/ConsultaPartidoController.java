@@ -15,10 +15,12 @@ import java.io.Serializable;
 import java.net.URL;
 //import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 //import java.util.Calendar;
 //import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -44,13 +46,13 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
- * Clase de controlador FXML ConsultaPartidoController que pertenece al
- * paquete com.mycompany.poroyecto_prueba e implementa Initializable
+ * Clase de controlador FXML ConsultaPartidoController que pertenece al paquete
+ * com.mycompany.poroyecto_prueba e implementa Initializable
  *
  * @author Michael Estrada
  * @author Carlos Tingo
  */
-public class ConsultaPartidoController implements Initializable, Serializable {
+public class ConsultaPartidoController implements Initializable {
 
     private final ArrayList<Partido> listPartido = Partido.listaPartido("WorldCupMatchesBrasil2014.csv");
     private final ArrayList<Jugador> listJugadores = Jugador.listaJugadores("WorldCupPlayersBrasil2014.csv");
@@ -68,8 +70,7 @@ public class ConsultaPartidoController implements Initializable, Serializable {
 
     @FXML
     private HBox contenedorDatos;
-    
-    
+
     private VBox contenedor1 = new VBox();
 
     private VBox contenedor2 = new VBox();
@@ -83,6 +84,7 @@ public class ConsultaPartidoController implements Initializable, Serializable {
     private HBox contenedorTitulo;
     @FXML
     private VBox contenedorBotones;
+
     /**
      * Método sobreescrito que permite Inicializa la clase de controlador.
      *
@@ -306,7 +308,8 @@ public class ConsultaPartidoController implements Initializable, Serializable {
             eqLocal.getChildren().addAll(lblimgne, lblVisit);
 
         }
-        ArrayList<Jugador> jugadores = equiposSeleccionados(partidoSeleccionado); 
+        ArrayList<Jugador> jugadores = equiposSeleccionados(partidoSeleccionado);
+        System.out.println(jugadores);
         Button exportarGrupo = new Button("EXPORTAR RESULTADO DE GRUPOS");
         Button detalle = new Button("VER DETALLE DE EQUIPO");
         exportarGrupo.setOnAction(new EventHandler<ActionEvent>() {
@@ -331,16 +334,12 @@ public class ConsultaPartidoController implements Initializable, Serializable {
 
         contenedor4.getChildren().add(eqVisit);
         contenedorDatos.setSpacing(50);
-        contenedorGeneralDatos.getChildren().addAll(contenedorDatos,contenedorBotones);
+        contenedorGeneralDatos.getChildren().addAll(contenedorDatos, contenedorBotones);
         contenedorDatos.getChildren().addAll(contenedor1, contenedor2, contenedor3, contenedor4);
         contenedorDatos.setPadding(new Insets(10));
-        
-        
-        
-        
-        
-        
+
     }
+
     private void ventanaExportar(ArrayList<Jugador> jugadores) {
         Stage stage = new Stage();
         Button aceptar = new Button("Aceptar");
@@ -357,7 +356,7 @@ public class ConsultaPartidoController implements Initializable, Serializable {
                     out.flush();
                     msg.setText("Se ha generado el archivo correctamente");
                 } catch (FileNotFoundException ex) {
-                   msg.setText("Lo sentimos, no se pudo guardar");
+                    msg.setText("Lo sentimos, no se pudo guardar");
                 } catch (IOException ex) {
                     msg.setText("Lo sentimos, no se pudo guardar");
                 }
@@ -377,36 +376,128 @@ public class ConsultaPartidoController implements Initializable, Serializable {
         stage.show();
 
     }
+
     private void ventanaDetalle(ArrayList<Jugador> jugadores) {
         Stage stage = new Stage();
-        FlowPane root = new FlowPane();
+
+        VBox root = new VBox();
+        root.setPrefHeight(480);
+        root.setPrefWidth(640);
+
+        HBox contenedorLocal = new HBox();
+        Label equiLocal = new Label("Equipo Local");
+        equiLocal.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+
+        contenedorLocal.getChildren().add(equiLocal);
+        FlowPane jugadoresEquipoLocal = new FlowPane();
+
+        Label equiVisit = new Label("Equipo Visitante");
+        HBox contenedorVisit = new HBox();
+        equiVisit.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        contenedorVisit.getChildren().add(equiVisit);
+
+        FlowPane jugadoresEquipoVisit = new FlowPane();
         Label lblTitulo = new Label("Detalle de equipos");
         lblTitulo.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         VBox titulo = new VBox(lblTitulo);
         titulo.setAlignment(Pos.CENTER);
         root.getChildren().add(titulo);
-        
-        
-        
-        
+
+        root.getChildren().add(contenedorLocal);
+        root.getChildren().add(jugadoresEquipoLocal);
+        root.getChildren().add(contenedorVisit);
+        root.getChildren().add(jugadoresEquipoVisit);
+        ArrayList<Jugador> jugadoresLocal = null;
+        ArrayList<String> equipoParticipante = new ArrayList<>();
+        for (Jugador r : jugadores) {
+
+            if (!equipoParticipante.contains(r.getInciales())) {
+                equipoParticipante.add(r.getInciales());
+
+            }
+
+        }
+        ImageView imgvLocal = null;
+        Label lblImgNoEncontrada = null;
+        FileInputStream fi = null;
+        for (Jugador r : jugadores) {
+
+            if (r.getInciales().equals(equipoParticipante.get(0))) {
+                VBox contenedorJLocal = new VBox();
+
+                try {
+                    fi = new FileInputStream(Proyecto2P_G7.pathImg + "StandardImg.jpg");
+                    Image i = new Image(fi);
+                    imgvLocal = new ImageView(i);
+                    contenedorJLocal.getChildren().addAll(imgvLocal, new Label("Nombre Jugador"));
+                    jugadoresEquipoLocal.getChildren().add(contenedorJLocal);
+                } catch (FileNotFoundException fnf2) {
+                    eqLocal.getChildren().clear();
+                    eqLocal.getChildren().add(new Label("Imagen no encontrada"));
+                }
+                imgvLocal.setFitHeight(37);
+                imgvLocal.setFitWidth(50);
+
+            }
+        }
+        ImageView imgvVisit = null;
+        Label lblimgne = null;
+        FileInputStream fiv = null;
+        for (Jugador r : jugadores) {
+
+            if (r.getInciales().equals(equipoParticipante.get(1))) {
+                VBox contenedorJVisit = new VBox();
+
+                try {
+                    fiv = new FileInputStream(Proyecto2P_G7.pathImg + "StandardImg.jpg");
+                    Image i = new Image(fiv);
+                    imgvVisit = new ImageView(i);
+                    contenedorJVisit.getChildren().addAll(imgvVisit, new Label("Nombre Jugador"));
+                    jugadoresEquipoVisit.getChildren().add(contenedorJVisit);
+                } catch (FileNotFoundException fnf2) {
+                    eqLocal.getChildren().clear();
+                    eqLocal.getChildren().add(new Label("Imagen no encontrada"));
+                }
+                imgvVisit.setFitHeight(37);
+                imgvVisit.setFitWidth(50);
+            }
+        }
         Scene scene = new Scene(root);
+
         stage.setScene(scene);
         stage.show();
     }
     
-    private ArrayList<Jugador> equiposSeleccionados(Partido partidoSeleccionado) {
-        String match = partidoSeleccionado.getMatchID();
-        String round = partidoSeleccionado.getRoundID();
-        ArrayList<Jugador> jugadores= new ArrayList<>();
-        for(Jugador r:listJugadores){
-            if(match.equals(r.getMatchId())){
-                jugadores.add(r);
-                
+    private void cargarHilo(){
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(10000);
+                }catch(InterruptedException ex){
+                    
+                }
+                Platform.runLater(()->{
+                    //Etiqueta
+                });
                 
             }
             
-        }
+        });
         
+    }
+
+    private ArrayList<Jugador> equiposSeleccionados(Partido partidoSeleccionado) {
+        String match = partidoSeleccionado.getMatchID();
+        String round = partidoSeleccionado.getRoundID();
+        ArrayList<Jugador> jugadores = new ArrayList<>();
+        for (Jugador r : listJugadores) {
+            if (match.equals(r.getMatchId())) {
+                jugadores.add(r);
+
+            }
+
+        }
 
         return jugadores;
     }

@@ -8,13 +8,14 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author USER
  */
-public class Jugador {
+public class Jugador implements Serializable {
 
     private String RoundId;
     private String matchId;
@@ -219,7 +220,7 @@ public class Jugador {
      */
     @Override
     public String toString() {
-        return "Jugador{" + "RoundId=" + RoundId + ", matchId=" + matchId + ", inciales=" + inciales + ", entrenador=" + entrenador + ", alineacion=" + alineacion + ", numeroCamiseta=" + numeroCamiseta + ", nombreJug=" + nombreJug + ", position=" + position + ", evento=" + evento + '}';
+        return     nombreJug +"_"+ inciales ;
     }
     
     
