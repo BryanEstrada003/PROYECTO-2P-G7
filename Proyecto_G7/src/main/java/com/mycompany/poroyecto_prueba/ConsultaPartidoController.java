@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Random;
 //import java.util.Calendar;
 //import java.util.Locale;
 import java.util.ResourceBundle;
@@ -38,9 +39,13 @@ import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -56,7 +61,7 @@ public class ConsultaPartidoController implements Initializable {
 
     private final ArrayList<Partido> listPartido = Partido.listaPartido("WorldCupMatchesBrasil2014.csv");
     private final ArrayList<Jugador> listJugadores = Jugador.listaJugadores("WorldCupPlayersBrasil2014.csv");
-    int contador = 0;
+    static int contador;
     @FXML
     private ComboBox<String> faseCmb;
     @FXML
@@ -331,7 +336,6 @@ public class ConsultaPartidoController implements Initializable {
 
         }
         ArrayList<Jugador> jugadores = equiposSeleccionados(partidoSeleccionado);
-        System.out.println(jugadores);
         Button exportarGrupo = new Button("EXPORTAR RESULTADO DE GRUPOS");
         Button detalle = new Button("VER DETALLE DE EQUIPO");
         exportarGrupo.setOnAction(new EventHandler<ActionEvent>() {
@@ -467,8 +471,22 @@ public class ConsultaPartidoController implements Initializable {
                     imgvLocal = new ImageView(i);
                     contenedorJLocal.getChildren().addAll(imgvLocal, new Label(r.getNombreJug()));
                     jugadoresEquipoLocal.getChildren().add(contenedorJLocal);
+                    
                     imgvLocal.setFitHeight(80);
                     imgvLocal.setFitWidth(120);
+
+                    contenedorJLocal.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent e) {
+//                    System.out.println("");
+                            String nomJugador = r.getNombreJug();
+                            String iniciales = r.getInciales();
+                            String numCamisa = r.getNumeroCamiseta();
+                            String tecnico = r.getEntrenador();
+                            crearNuevaVentana(Proyecto2P_G7.pathImg + nomJugador + "_" + r.getInciales() + ".jpg", Proyecto2P_G7.pathImg + "StandardImg.jpg", r.getNombreJug(), iniciales, numCamisa, tecnico);
+
+                        }
+                    });
                     //cargarImagenesHilo(r,contenedorJLocal,imgvLocal,new Label(r.getNombreJug()),jugadoresEquipoLocal);
                 } catch (IOException ioe) {
                     lblImgNoEncontrada = new Label();
@@ -490,8 +508,6 @@ public class ConsultaPartidoController implements Initializable {
         FileInputStream fiv = null;
         for (Jugador r : jugadores) {
             if (r.getInciales().equals(equipoParticipante.get(1))) {
-                System.out.println(r);
-                System.out.println(r.getInciales());
                 VBox contenedorJVisit = new VBox();
 
                 try {
@@ -502,6 +518,18 @@ public class ConsultaPartidoController implements Initializable {
                     jugadoresEquipoVisit.getChildren().add(contenedorJVisit);
                     imgvVisit.setFitHeight(80);
                     imgvVisit.setFitWidth(120);
+                    contenedorJVisit.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent e) {
+//                    System.out.println("");
+                            String nomJugador = r.getNombreJug();
+                            String iniciales = r.getInciales();
+                            String numCamisa = r.getNumeroCamiseta();
+                            String tecnico = r.getEntrenador();
+                            crearNuevaVentana(Proyecto2P_G7.pathImg + nomJugador + "_" + r.getInciales() + ".jpg", Proyecto2P_G7.pathImg + "StandardImg.jpg", r.getNombreJug(), iniciales, numCamisa, tecnico);
+
+                        }
+                    });
                 } catch (IOException ioe) {
                     lblImgNoEncontrada = new Label();
                     try {
@@ -522,6 +550,9 @@ public class ConsultaPartidoController implements Initializable {
     }
 
     private void cargarImagenesHilo(Jugador jugador, VBox equipo, ImageView img, Label lbl, FlowPane contenedor) {
+        
+        
+        Random r1 = new Random();
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -533,8 +564,8 @@ public class ConsultaPartidoController implements Initializable {
                     img.setImage(i);
                     equipo.getChildren().addAll(img, new Label(jugador.getNombreJug()));
                     contenedor.getChildren().add(equipo);
-                    
-                    Thread.sleep(1000);
+
+                    Thread.sleep(r1.nextInt(15000) + 5000);
 
                     img.setFitHeight(80);
                     img.setFitWidth(120);
@@ -570,6 +601,101 @@ public class ConsultaPartidoController implements Initializable {
         }
 
         return jugadores;
+    }
+    
+    /**
+     * este metodo carga una ventana para mostrar el jugador junto a su imagen y los segundos que se cerrará
+     * @param ruta ruta de imagen
+     * @param rutaStandard ruta de imagen standard 
+     * @param nombre nombre del jugador
+     * @param iniciales iniciales del equipo
+     * @param numCamisa numero de camisa
+     * @param tecnico nombre del tecnico
+     */
+    private void crearNuevaVentana(String ruta, String rutaStandard, String nombre, String iniciales, String numCamisa, String tecnico) {
+
+        Stage s = new Stage();
+
+        ImageView imageView = null;
+        try ( FileInputStream fis = new FileInputStream(ruta)) {
+
+            Image img = new Image(fis);
+            imageView = new ImageView(img);
+
+        } catch (IOException io) {
+            try ( FileInputStream fi = new FileInputStream(rutaStandard)) {
+                Image img = new Image(fi);
+                imageView = new ImageView(img);
+
+            } catch (IOException ioe) {
+
+            }
+
+        }
+        imageView.setFitHeight(80);
+        imageView.setFitWidth(120);
+
+        Label lblNombre = new Label(nombre);
+        lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        Label lbIniciales = new Label(iniciales);
+        Label lbCamisa = new Label("CAMISETA NRO. " + numCamisa);
+        Label lbTecnico = new Label("DIR. TEC. " + tecnico);
+        HBox contenedorContador = new HBox();
+        Label lcontador = new Label();
+
+        VBox contenedor2 = new VBox();
+        contenedor2.setAlignment(Pos.CENTER);
+        contenedor2.setBackground(new Background(new BackgroundFill(Color.AQUA, CornerRadii.EMPTY, Insets.EMPTY)));
+        contenedor2.getChildren().addAll(lbIniciales, lbCamisa, lbTecnico);
+
+        contenedorContador.getChildren().addAll(new Label("Mostrando por "), lcontador, new Label("segundos"));
+        contenedorContador.setAlignment(Pos.CENTER);
+
+        Thread t;
+        t = new Thread(() -> {
+
+            for (int i = 0; i <= 10; i++) {
+                crearThreadNuevaVentana(lcontador, String.valueOf(i), s);
+
+                contador = i;
+
+                try {
+                    Thread.sleep(1000);
+
+                } catch (InterruptedException ex) {
+                }
+
+            }
+
+        });
+
+        t.setDaemon(true);
+        t.start();
+
+        VBox root = new VBox(lblNombre, imageView, contenedor2, contenedorContador);
+        root.setAlignment(Pos.CENTER);
+        root.setSpacing(10);
+        root.setPadding(new Insets(30));
+
+        Scene scene = new Scene(root, 300, 300);
+        s.setScene(scene);
+        s.show();
+
+    }
+    /**
+     * Este metodo es encargado de crear la nueva ventana 
+     * @param l etiqueta que mostrará de contador
+     * @param msg mensaje contador
+     * @param s escena que se cerrará
+     */
+    private void crearThreadNuevaVentana(Label l, String msg, Stage s) {
+        Platform.runLater(() -> {
+            l.setText(msg);
+            if (Integer.valueOf(msg) == 10) {
+                s.close();
+            }
+        });
+
     }
 
 }
