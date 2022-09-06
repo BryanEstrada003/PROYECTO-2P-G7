@@ -20,7 +20,6 @@ import java.util.HashSet;
 //import java.util.Calendar;
 //import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -57,7 +56,7 @@ public class ConsultaPartidoController implements Initializable {
 
     private final ArrayList<Partido> listPartido = Partido.listaPartido("WorldCupMatchesBrasil2014.csv");
     private final ArrayList<Jugador> listJugadores = Jugador.listaJugadores("WorldCupPlayersBrasil2014.csv");
-
+    int contador = 0;
     @FXML
     private ComboBox<String> faseCmb;
     @FXML
@@ -347,6 +346,7 @@ public class ConsultaPartidoController implements Initializable {
                 ventanaDetalle(jugadores);
             }
         });
+        contenedorBotones.getChildren().clear();
         contenedorBotones.getChildren().addAll(exportarGrupo, detalle);
         contenedorBotones.setAlignment(Pos.CENTER);
         contenedorBotones.setSpacing(20);
@@ -362,10 +362,14 @@ public class ConsultaPartidoController implements Initializable {
         contenedorDatos.setPadding(new Insets(10));
 
     }
-/**
- * Este metodo carga una ventana el cual da las opciones de exportar los datos
- * @param jugadores recibe un ArrayList de tipo Jugador para poder cargar los datos de los jugadores
- */
+
+    /**
+     * Este metodo carga una ventana el cual da las opciones de exportar los
+     * datos
+     *
+     * @param jugadores recibe un ArrayList de tipo Jugador para poder cargar
+     * los datos de los jugadores
+     */
     private void ventanaExportar(ArrayList<Jugador> jugadores) {
         Stage stage = new Stage();
         Button aceptar = new Button("Aceptar");
@@ -411,18 +415,20 @@ public class ConsultaPartidoController implements Initializable {
         root.setPrefWidth(640);
 
         HBox contenedorLocal = new HBox();
-        Label equiLocal = new Label("Equipo Local");
+        Label equiLocal = new Label();
         equiLocal.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
         contenedorLocal.getChildren().add(equiLocal);
         FlowPane jugadoresEquipoLocal = new FlowPane();
+        jugadoresEquipoLocal.setHgap(10);
 
-        Label equiVisit = new Label("Equipo Visitante");
+        Label equiVisit = new Label();
         HBox contenedorVisit = new HBox();
         equiVisit.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         contenedorVisit.getChildren().add(equiVisit);
 
         FlowPane jugadoresEquipoVisit = new FlowPane();
+        jugadoresEquipoVisit.setHgap(10);
         Label lblTitulo = new Label("Detalle de equipos");
         lblTitulo.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         VBox titulo = new VBox(lblTitulo);
@@ -443,49 +449,70 @@ public class ConsultaPartidoController implements Initializable {
             }
 
         }
+        equiLocal.setText(equipoParticipante.get(0));
+        equiVisit.setText(equipoParticipante.get(1));
+
+        //Cargar imagenes equipo local
         ImageView imgvLocal = null;
         Label lblImgNoEncontrada = null;
         FileInputStream fi = null;
         for (Jugador r : jugadores) {
-
             if (r.getInciales().equals(equipoParticipante.get(0))) {
+
                 VBox contenedorJLocal = new VBox();
 
                 try {
-                    fi = new FileInputStream(Proyecto2P_G7.pathImg + "StandardImg.jpg");
+                    fi = new FileInputStream(Proyecto2P_G7.pathImg + r.getNombreJug() + "_" + r.getInciales() + ".jpg");
                     Image i = new Image(fi);
                     imgvLocal = new ImageView(i);
-                    contenedorJLocal.getChildren().addAll(imgvLocal, new Label("Nombre Jugador"));
+                    contenedorJLocal.getChildren().addAll(imgvLocal, new Label(r.getNombreJug()));
                     jugadoresEquipoLocal.getChildren().add(contenedorJLocal);
-                } catch (FileNotFoundException fnf2) {
-                    eqLocal.getChildren().clear();
-                    eqLocal.getChildren().add(new Label("Imagen no encontrada"));
+                    imgvLocal.setFitHeight(80);
+                    imgvLocal.setFitWidth(120);
+                    //cargarImagenesHilo(r,contenedorJLocal,imgvLocal,new Label(r.getNombreJug()),jugadoresEquipoLocal);
+                } catch (IOException ioe) {
+                    lblImgNoEncontrada = new Label();
+                    try {
+                        fi = new FileInputStream(Proyecto2P_G7.pathImg + "StandardImg.jpg");
+                        Image i = new Image(fi);
+                        imgvLocal = new ImageView(i);
+                    } catch (FileNotFoundException fnf2) {
+
+                    }
                 }
-                imgvLocal.setFitHeight(37);
-                imgvLocal.setFitWidth(50);
 
             }
         }
+        //Visitante
+
         ImageView imgvVisit = null;
         Label lblimgne = null;
         FileInputStream fiv = null;
         for (Jugador r : jugadores) {
-
             if (r.getInciales().equals(equipoParticipante.get(1))) {
+                System.out.println(r);
+                System.out.println(r.getInciales());
                 VBox contenedorJVisit = new VBox();
 
                 try {
-                    fiv = new FileInputStream(Proyecto2P_G7.pathImg + "StandardImg.jpg");
+                    fiv = new FileInputStream(Proyecto2P_G7.pathImg + r.getNombreJug() + "_" + r.getInciales() + ".jpg");
                     Image i = new Image(fiv);
                     imgvVisit = new ImageView(i);
-                    contenedorJVisit.getChildren().addAll(imgvVisit, new Label("Nombre Jugador"));
+                    contenedorJVisit.getChildren().addAll(imgvVisit, new Label(r.getNombreJug()));
                     jugadoresEquipoVisit.getChildren().add(contenedorJVisit);
-                } catch (FileNotFoundException fnf2) {
-                    eqLocal.getChildren().clear();
-                    eqLocal.getChildren().add(new Label("Imagen no encontrada"));
+                    imgvVisit.setFitHeight(80);
+                    imgvVisit.setFitWidth(120);
+                } catch (IOException ioe) {
+                    lblImgNoEncontrada = new Label();
+                    try {
+                        fiv = new FileInputStream(Proyecto2P_G7.pathImg + "StandardImg.jpg");
+                        Image i = new Image(fiv);
+                        imgvVisit = new ImageView(i);
+                    } catch (FileNotFoundException fnf2) {
+
+                    }
                 }
-                imgvVisit.setFitHeight(37);
-                imgvVisit.setFitWidth(50);
+
             }
         }
         Scene scene = new Scene(root);
@@ -494,30 +521,42 @@ public class ConsultaPartidoController implements Initializable {
         stage.show();
     }
 
-    private void cargarHilo() {
+    private void cargarImagenesHilo(Jugador jugador, VBox equipo, ImageView img, Label lbl, FlowPane contenedor) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+
                 try {
-                    Thread.sleep(10000);
+
+                    FileInputStream fiv = new FileInputStream(Proyecto2P_G7.pathImg + jugador.getNombreJug() + "_" + jugador.getInciales() + ".jpg");
+                    Image i = new Image(fiv);
+                    img.setImage(i);
+                    equipo.getChildren().addAll(img, new Label(jugador.getNombreJug()));
+                    contenedor.getChildren().add(equipo);
+                    
+                    Thread.sleep(1000);
+
+                    img.setFitHeight(80);
+                    img.setFitWidth(120);
+
+                } catch (IOException ioe) {
+
                 } catch (InterruptedException ex) {
-
+                    ex.printStackTrace();
                 }
-                Platform.runLater(() -> {
-                    //Etiqueta
-                });
-
             }
 
         });
 
     }
-    /**
-     * Este metodo se encarga de cargar un ArrayList de tipo Jugador para poder trabajar con la nueva ventana
-     * @param partidoSeleccionado recibe parametro de tipo Partido
-     * @return 
-     */
 
+    /**
+     * Este metodo se encarga de cargar un ArrayList de tipo Jugador para poder
+     * trabajar con la nueva ventana
+     *
+     * @param partidoSeleccionado recibe parametro de tipo Partido
+     * @return
+     */
     private ArrayList<Jugador> equiposSeleccionados(Partido partidoSeleccionado) {
         String match = partidoSeleccionado.getMatchID();
         String round = partidoSeleccionado.getRoundID();
@@ -532,4 +571,5 @@ public class ConsultaPartidoController implements Initializable {
 
         return jugadores;
     }
+
 }
